@@ -12,7 +12,7 @@
 ### Peer-reviewed
 - [MMTSA: Multi-Modal Temporal Segment Attention Network for Efficient Human Activity Recognition](https://dl.acm.org/doi/10.1145/3610872)
 <br>**Ziqi Gao\***, Yuntao Wang\*\+, Jianguo Chen, Junliang Xing, Shwetak Patel, Xin Liu, Yuanchun Shi.
-<br><ins>*IMWUT 2023 (UbiComp2023 Oral)*</ins>
+<br><ins>*IMWUT 2023*</ins> **(UbiComp2023 Oral)**
 
 ## 🎓 Education
 - **University of Washington**  
