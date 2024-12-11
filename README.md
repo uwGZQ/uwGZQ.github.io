@@ -1,6 +1,6 @@
-**Bio**: I am a third-year dual-degree Master’s student pursuing an MS in Technology Innovation at the University of Washington (Seattle) and an MS in Engineering (Data Science & IT) at Tsinghua University. At Tsinghua, I am affiliated with the Pervasive HCI Lab, where I am advised by Prof. [Yuanchun Shi](https://www.cs.tsinghua.edu.cn/csen/info/1306/4332.htm) and Prof. [Yuntao Wang](https://pi.cs.tsinghua.edu.cn/lab/people/YuntaoWang/en/). Concurrently, I am a research assistant at the UW CSE RAIVN Lab, under the supervision of Prof. [Ranjay Krishna](http://www.ranjaykrishna.com/index.html) and Senior Ph.D. student [Jieyu Zhang](https://jieyuz2.github.io/). 
+**Bio**: I am a third-year dual-degree Master’s student pursuing an MS in Technology Innovation at the University of Washington (Seattle) and an MS in Engineering (Data Science & IT) at Tsinghua University. At Tsinghua, I am affiliated with the Pervasive HCI Lab, where I am advised by Prof. [Yuanchun Shi](https://www.cs.tsinghua.edu.cn/csen/info/1306/4332.htm) and Prof. [Yuntao Wang](https://pi.cs.tsinghua.edu.cn/lab/people/YuntaoWang/en/). Concurrently, I am a research assistant at the UW CSE RAIVN Lab, under the supervision of Prof. [Ranjay Krishna](http://www.ranjaykrishna.com/index.html) and senior Ph.D. student [Jieyu Zhang](https://jieyuz2.github.io/). 
 
-**Research Interests**: My research focuses on Data-centric AI, Text-to-Vision Generation, Multimodal Learning.
+**Research Interests**: My research focuses on Data-centric AI, Text-to-Vision Generation, Multimodal Learning, Ubiquitous computing, etc.
 
 ## 📝 Selected Publications
 (* denotes equal contribution, + denotes corresponding author)
