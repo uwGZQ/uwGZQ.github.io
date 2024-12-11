@@ -1,6 +1,6 @@
-Hi, I am a 3rd year master at the University of Washington and Tsinghua University, Seattle, advised by Prof. [Yuntao Wang](https://pi.cs.tsinghua.edu.cn/lab/people/YuntaoWang/en/), Prof. [Ranjay Krishna](http://www.ranjaykrishna.com/index.html), Prof. [Yuanchun Shi](https://www.cs.tsinghua.edu.cn/csen/info/1306/4332.htm), PhD student [Jieyu Zhang](https://jieyuz2.github.io/), at [UW CSE RAIVN Lab](https://raivn.cs.washington.edu/).
+**Bio**: I am a third-year dual-degree Master’s student pursuing an MS in Technology Innovation at the University of Washington (Seattle) and an MS in Engineering (Data Science & IT) at Tsinghua University. At Tsinghua, I am affiliated with the PCG Lab, where I am advised by Prof. [Yuanchun Shi](https://www.cs.tsinghua.edu.cn/csen/info/1306/4332.htm) and Prof. [Yuntao Wang](https://pi.cs.tsinghua.edu.cn/lab/people/YuntaoWang/en/). Concurrently, I am a research assistant at the RAIVN Lab, University of Washington, under the supervision of Prof. [Ranjay Krishna](http://www.ranjaykrishna.com/index.html) and Senior Ph.D. student [Jieyu Zhang](https://jieyuz2.github.io/). 
 
-**Research Interests**: My current research interests span Data-centric AI, Text-to-Vision Generation, Multimodal Learning.
+**Research Interests**: My research focuses on Data-centric AI, Text-to-Vision Generation, Multimodal Learning.
 
 ## 📝 Selected Publications
 (* denotes equal contribution, + denotes corresponding author)
@@ -21,13 +21,11 @@ Hi, I am a 3rd year master at the University of Washington and Tsinghua Universi
 - **Tsinghua University**  
   *M.S. in Data Science and Information Technology*  
   2022 – 2025 (Expected)
-- **Tsinghua University**  
-  *M.S. in Data Science and Information Technology*  
-  2022 – 2025 (Expected)
 
   
 ## 🏅 Awards
-- UW CSE John and JoAnne Wisniewski Endowed Scholarship 2024
+- '129' Scholarship of Tsinghua University, 2024
+- First-Class Scholarship of Tsinghua University, 2023
 
 
 
