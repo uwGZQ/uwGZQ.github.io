@@ -24,19 +24,12 @@ Hi, I am a 3rd year master at the University of Washington and Tsinghua Universi
 - **Tsinghua University**  
   *M.S. in Data Science and Information Technology*  
   2022 – 2025 (Expected)
-<!-- ## 📰 News
-- [2024-9] Our work [Task Me Anything](https://www.task-me-anything.org/) is accepted to NeurIPS 2024.
-- [2024-7] Our work [m&m's: A Benchmark to Evaluate Tool-Use for multi-step multi-modal Tasks](https://arxiv.org/abs/2403.11085) is accepted to ECCV 2024. -->
+
   
 ## 🏅 Awards
 - UW CSE John and JoAnne Wisniewski Endowed Scholarship 2024
 
-<!-- ## 📍 Professional Services
-- Undergrad Organizer of **Synthetic Data for Computer Vision Workshop @ CVPR 2024.** [[website](https://syndata4cv.github.io/)] -->
+
 
 ## 📫 Contact
 Email: gzq@uw.edu
-<!-- <br>Twitter (X): [@weikaih04](https://twitter.com/weikaih04) -->
-<!-- <br>Linkedin: [Weikai Huang](https://www.linkedin.com/in/weikaihuang/)
-<br>Wechat: hwk18105962347 -->
-```
