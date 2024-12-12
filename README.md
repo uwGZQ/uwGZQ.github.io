@@ -5,7 +5,7 @@
 ## 📝 Selected Publications
 (* denotes equal contribution, + denotes corresponding author)
 ### Preprints
-- [Generate Any Scene: Evaluating and Improving Text-to-Vision Generation with Scene Graph Programming]()
+- [Generate Any Scene: Evaluating and Improving Text-to-Vision Generation with Scene Graph Programming](https://arxiv.org/abs/2412.08221)
 <br>**Ziqi Gao\***, Weikai Huang\*, Jieyu Zhang, Aniruddha Kembhavi, Ranjay Krishna\+
 
 
