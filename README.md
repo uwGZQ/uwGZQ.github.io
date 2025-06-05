@@ -4,7 +4,8 @@
 
 **Research Interests**: My research focuses on Data-centric AI, Text-to-Vision Generation, Multimodal Learning, Robotics, Ubiquitous computing, etc.
 
-## 📝 Selected Publications
+<!-- ## 📝 Selected Publications -->
+## 📝 Publications
 (* denotes equal contribution, + denotes corresponding author)
 ### Preprints
 - [Generate Any Scene: Evaluating and Improving Text-to-Vision Generation with Scene Graph Programming](https://arxiv.org/abs/2412.08221)
@@ -13,6 +14,8 @@
 - [One Trajectory, One Token: Grounded Video Tokenization via Panoptic Sub-object Trajectory](https://arxiv.org/abs/2505.23617)
 <br>Chenhao Zheng, Jieyu Zhang, Mohammadreza Salehi, Ziqi Gao, Vishnu Iyengar, Norimasa Kobori, Quan Kong, Ranjay Krishna\+
 
+- [SOS: Synthetic Object Segments Improve Detection, Segmentation, and Grounding](https://arxiv.org/)
+<br>Weikai Huang, Jieyu Zhang, Taoyang Jia, Chenhao Zheng, Ziqi Gao, Jae Sung Park, Ranjay Krishna\+
 
 ### Peer-reviewed
 - [MMTSA: Multi-Modal Temporal Segment Attention Network for Efficient Human Activity Recognition](https://dl.acm.org/doi/10.1145/3610872)
