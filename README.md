@@ -8,16 +8,22 @@
 ## 📝 Publications
 (* denotes equal contribution, + denotes corresponding author)
 ### Preprints
-- [Generate Any Scene: Evaluating and Improving Text-to-Vision Generation with Scene Graph Programming](https://arxiv.org/abs/2412.08221)
-<br>**Ziqi Gao\***, Weikai Huang\*, Jieyu Zhang, Aniruddha Kembhavi, Ranjay Krishna\+
+- [Molmo2: Open Weights and Data for Vision-Language Models with Video Understanding and Grounding](https://arxiv.org/abs/2601.10611)
+<br>Christopher Clark, Jieyu Zhang, Zixian Ma, Jae Sung Park, Mohammadreza Salehi, Rohun Tripathi, Sangho Lee, Jason Ren, Chris Dongjoo Kim, Yinuo Yang, Vincent Shao, Yue Yang, Weikai Huang, Ziqi Gao, Taira Anderson, Jianrui Zhang, Jitesh Jain, George Stoica, Winston Han, Ali Farhadi, Ranjay Krishna\+.
 
-- [One Trajectory, One Token: Grounded Video Tokenization via Panoptic Sub-object Trajectory](https://arxiv.org/abs/2505.23617)
-<br>Chenhao Zheng, Jieyu Zhang, Mohammadreza Salehi, Ziqi Gao, Vishnu Iyengar, Norimasa Kobori, Quan Kong, Ranjay Krishna\+
-
-- [SOS: Synthetic Object Segments Improve Detection, Segmentation, and Grounding](https://arxiv.org/)
+- [Synthetic Object Compositions for Scalable and Accurate Learning in Detection, Segmentation, and Grounding](https://arxiv.org/abs/2510.09110)
 <br>Weikai Huang, Jieyu Zhang, Taoyang Jia, Chenhao Zheng, Ziqi Gao, Jae Sung Park, Ranjay Krishna\+
 
 ### Peer-reviewed
+- [Generate Any Scene: Evaluating and Improving Text-to-Vision Generation with Scene Graph Programming](https://arxiv.org/abs/2412.08221)
+<br>**Ziqi Gao\***, Weikai Huang\*, Jieyu Zhang, Aniruddha Kembhavi, Ranjay Krishna\+<br><ins>ICLR 2026</ins>
+
+- [One Trajectory, One Token: Grounded Video Tokenization via Panoptic Sub-object Trajectory](https://arxiv.org/abs/2505.23617)
+<br>Chenhao Zheng, Jieyu Zhang, Mohammadreza Salehi, Ziqi Gao, Vishnu Iyengar, Norimasa Kobori, Quan Kong, Ranjay Krishna\+<br><ins>ICCV 2025 **Highlight**</ins>
+
+
+
+
 - [MMTSA: Multi-Modal Temporal Segment Attention Network for Efficient Human Activity Recognition](https://dl.acm.org/doi/10.1145/3610872)
 <br>**Ziqi Gao\***, Yuntao Wang\*\+, Jianguo Chen, Junliang Xing, Shwetak Patel, Xin Liu, Yuanchun Shi.
 <br><ins>*IMWUT 2023*</ins> **(UbiComp2023 Oral)**
