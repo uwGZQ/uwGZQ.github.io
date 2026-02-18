@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
-  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+        content="Synthetic Visual Genome 2: Extracting Large-scale Spatio-Temporal Scene Graphs from Videos">
+  <meta name="keywords" content="SVG2, Video Scene Graph, TRASER, Scene Graph Generation">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nerfies: Deformable Neural Radiance Fields</title>
+  <title>Synthetic Visual Genome 2: Extracting Large-scale Spatio-Temporal Scene Graphs from Videos</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
@@ -39,88 +39,333 @@
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
   <script src="./static/js/index.js"></script>
+  <style>
+    /* Stats Toggle Buttons */
+    .stats-btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .stats-btn {
+      margin: 5px;
+      padding: 12px 28px;
+      border: 2px solid #3273dc;
+      border-radius: 25px;
+      background: white;
+      color: #3273dc;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .stats-btn:hover {
+      background: #3273dc;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(50,115,220,0.3);
+    }
+    .stats-btn.active {
+      background: #3273dc;
+      color: white;
+      box-shadow: 0 4px 8px rgba(50,115,220,0.3);
+    }
+    .stats-image {
+      display: none;
+      max-width: 100%;
+      margin: 20px auto;
+    }
+    .stats-image.active {
+      display: block;
+    }
+
+    /* Relationship Sub-buttons */
+    .rel-btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .rel-btn {
+      margin: 3px;
+      padding: 8px 16px;
+      border: 2px solid #48c774;
+      border-radius: 20px;
+      background: white;
+      color: #48c774;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .rel-btn:hover {
+      background: #48c774;
+      color: white;
+      transform: translateY(-1px);
+    }
+    .rel-btn.active {
+      background: #48c774;
+      color: white;
+    }
+
+    /* Comparison Table */
+    .table-container {
+      overflow-x: auto;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      background: white;
+    }
+    .comparison-table th, .comparison-table td {
+      padding: 12px 10px;
+      text-align: center;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .comparison-table th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+    .comparison-table tbody tr {
+      transition: background-color 0.2s ease;
+    }
+    .comparison-table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+    .comparison-table tbody tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+    .comparison-table tbody tr:nth-child(even):hover {
+      background-color: #f0f0f0;
+    }
+    .comparison-table .highlight-row {
+      background: linear-gradient(135deg, #e8f4fd 0%, #d4edfa 100%) !important;
+      font-weight: 600;
+    }
+    .comparison-table .highlight-row:hover {
+      background: linear-gradient(135deg, #d4edfa 0%, #c0e6f7 100%) !important;
+    }
+    .comparison-table td:first-child {
+      text-align: left;
+      font-weight: 500;
+      padding-left: 15px;
+    }
+
+    /* Results Table */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      background: white;
+    }
+    .results-table th, .results-table td {
+      padding: 10px 8px;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+    }
+    .results-table thead tr:first-child th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+      border-bottom: 2px solid #5a67d8;
+    }
+    .results-table thead tr:first-child th[colspan] {
+      border-left: 2px solid rgba(255,255,255,0.3);
+      border-right: 2px solid rgba(255,255,255,0.3);
+    }
+    .results-table thead tr:first-child th:first-child {
+      border-left: none;
+    }
+    .results-table thead tr:first-child th:last-child {
+      border-right: none;
+    }
+    .results-table thead tr:nth-child(2) th {
+      background: #f0f0f5;
+      color: #444;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+    .results-table tbody tr {
+      transition: background-color 0.2s ease;
+    }
+    .results-table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+    .results-table .section-header {
+      background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+      font-weight: 600;
+      text-align: left;
+      padding-left: 15px;
+      color: #555;
+      font-style: italic;
+    }
+    .results-table .best {
+      font-weight: 700;
+      color: #276749;
+      background-color: rgba(72, 199, 116, 0.1);
+    }
+    .results-table .second {
+      text-decoration: underline;
+      text-decoration-color: #3273dc;
+      text-underline-offset: 2px;
+    }
+    .results-table .ours-row {
+      background: linear-gradient(135deg, #e8f4fd 0%, #d4edfa 100%) !important;
+    }
+    .results-table .ours-row:hover {
+      background: linear-gradient(135deg, #d4edfa 0%, #c0e6f7 100%) !important;
+    }
+    .results-table td:first-child {
+      text-align: left;
+      font-weight: 500;
+      padding-left: 12px;
+      white-space: nowrap;
+    }
+
+    /* Table Caption */
+    .table-caption {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 10px;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 4px;
+      border-left: 3px solid #3273dc;
+    }
+
+    /* Stats image container */
+    .stats-display {
+      min-height: 400px;
+      position: relative;
+    }
+
+    /* Pipeline and Model images */
+    .figure-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .figure-container img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    /* Key findings list styling */
+    .key-findings ul {
+      list-style: none;
+      padding: 0;
+    }
+    .key-findings li {
+      padding: 12px 15px;
+      margin: 10px 0;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-left: 4px solid #3273dc;
+      border-radius: 0 8px 8px 0;
+    }
+    .key-findings li:nth-child(2) {
+      border-left-color: #48c774;
+    }
+    .key-findings li:nth-child(3) {
+      border-left-color: #ffdd57;
+    }
+
+    /* VQA Table specific styling */
+    .comparison-table .best {
+      font-weight: 700;
+      color: #276749;
+      background-color: rgba(72, 199, 116, 0.15);
+    }
+
+    /* Responsive adjustments */
+    @media screen and (max-width: 768px) {
+      .stats-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+      .rel-btn {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+      .comparison-table, .results-table {
+        font-size: 0.75rem;
+      }
+      .comparison-table th, .comparison-table td,
+      .results-table th, .results-table td {
+        padding: 6px 4px;
+      }
+    }
+  </style>
 </head>
 <body>
-
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-  <div class="navbar-menu">
-    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-      <a class="navbar-item" href="https://keunhong.com">
-      <span class="icon">
-          <i class="fas fa-home"></i>
-      </span>
-      </a>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More Research
-        </a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item" href="https://hypernerf.github.io">
-            HyperNeRF
-          </a>
-          <a class="navbar-item" href="https://nerfies.github.io">
-            Nerfies
-          </a>
-          <a class="navbar-item" href="https://latentfusion.github.io">
-            LatentFusion
-          </a>
-          <a class="navbar-item" href="https://photoshape.github.io">
-            PhotoShape
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</nav>
-
 
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Nerfies: Deformable Neural Radiance Fields</h1>
+          <h1 class="title is-1 publication-title">Synthetic Visual Genome 2: Extracting Large-scale Spatio-Temporal Scene Graphs from Videos</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="https://keunhong.com">Keunhong Park</a><sup>1</sup>,</span>
+              <a href="https://uwgzq.github.io">Ziqi Gao</a><sup>1</sup>,</span>
             <span class="author-block">
-              <a href="https://utkarshsinha.com">Utkarsh Sinha</a><sup>2</sup>,</span>
+              <a href="https://jieyuz2.github.io">Jieyu Zhang</a><sup>1,2</sup>,</span>
             <span class="author-block">
-              <a href="https://jonbarron.info">Jonathan T. Barron</a><sup>2</sup>,
+              <a href="https://wisdomikezogwo.github.io">Wisdom Oluchi Ikezogwo</a><sup>1,2</sup>,
             </span>
             <span class="author-block">
-              <a href="http://sofienbouaziz.com">Sofien Bouaziz</a><sup>2</sup>,
+              <a href="https://jaesungpark96.github.io">Jae Sung Park</a><sup>1</sup>,
             </span>
             <span class="author-block">
-              <a href="https://www.danbgoldman.com">Dan B Goldman</a><sup>2</sup>,
+              <a href="https://www.linkedin.com/in/tario-you/">Tario G You</a><sup>2</sup>,
             </span>
             <span class="author-block">
-              <a href="https://homes.cs.washington.edu/~seitz/">Steven M. Seitz</a><sup>1,2</sup>,
+              <a href="https://www.linkedin.com/in/deogbu/">Daniel Ogbu</a><sup>2</sup>,
             </span>
             <span class="author-block">
-              <a href="http://www.ricardomartinbrualla.com">Ricardo Martin-Brualla</a><sup>2</sup>
+              <a href="https://hellomuffin.github.io">Chenhao Zheng</a><sup>1,2</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://weikaih04.github.io">Weikai Huang</a><sup>2</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/yinuo-yang-54114821a/">Yinuo Yang</a><sup>2</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://www.winsonhan.com">Winson Han</a><sup>1</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://fusionk.github.io/quankong/">Quan Kong</a><sup>3</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/rajat-saini/?originalSubdomain=jp">Rajat Saini</a><sup>3</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://www.ranjaykrishna.com/index.html">Ranjay Krishna</a><sup>1,2</sup>
             </span>
           </div>
 
           <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>1</sup>University of Washington,</span>
-            <span class="author-block"><sup>2</sup>Google Research</span>
+            <span class="author-block"><sup>1</sup>Allen Institute for AI</span>
+            <span class="author-block"><sup>2</sup>University of Washington,</span>
+            <span class="author-block"><sup>3</sup>Woven by Toyota</span>
           </div>
 
           <div class="column has-text-centered">
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href="https://arxiv.org/pdf/2011.12948"
+                <a href="https://arxiv.org/"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-file-pdf"></i>
@@ -128,44 +373,33 @@
                   <span>Paper</span>
                 </a>
               </span>
+              <!-- Model Link. -->
               <span class="link-block">
-                <a href="https://arxiv.org/abs/2011.12948"
+                <a href="https://huggingface.co/UWGZQ/TRASER"
                    class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
-                </a>
-              </span>
-              <!-- Video Link. -->
-              <span class="link-block">
-                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-youtube"></i>
-                  </span>
-                  <span>Video</span>
-                </a>
-              </span>
-              <!-- Code Link. -->
-              <span class="link-block">
-                <a href="https://github.com/google/nerfies"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-github"></i>
-                  </span>
-                  <span>Code</span>
+                  <span style="margin-right:6px;">&#129303;</span>
+                  <span>Model</span>
                   </a>
               </span>
               <!-- Dataset Link. -->
               <span class="link-block">
-                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                <a href="https://huggingface.co/datasets/UWGZQ/Synthetic_Visual_Genome2"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="far fa-images"></i>
                   </span>
                   <span>Data</span>
                   </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code (Coming soon)</span>
+                  </a>
+              </span>
             </div>
 
           </div>
@@ -178,73 +412,10 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <video id="teaser" autoplay muted loop playsinline height="100%">
-        <source src="./static/videos/teaser.mp4"
-                type="video/mp4">
-      </video>
+      <img src="./static/images/Teaser.png" width="100%">
       <h2 class="subtitle has-text-centered">
-        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
-        free-viewpoint
-        portraits.
+        <span class="dnerf">Synthetic Visual Genome 2 (SVG2)</span> provides large-scale video scene graphs with 636K videos, 6.6M objects, 52M attributes, and 6.7M relations for training video understanding models.
       </h2>
-    </div>
-  </div>
-</section>
-
-
-<section class="hero is-light is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-steve">
-          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/steve.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-chair-tp">
-          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/chair-tp.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-shiba">
-          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/shiba.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-fullbody">
-          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/fullbody.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-blueshirt">
-          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/blueshirt.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-mask">
-          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/mask.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-coffee">
-          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/coffee.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-toby">
-          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/toby2.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -258,185 +429,567 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            We present the first method capable of photorealistically reconstructing a non-rigidly
-            deforming scene using photos/videos captured casually from mobile phones.
+            We introduce <strong>Synthetic Visual Genome 2 (SVG2)</strong>, a large-scale panoptic video scene graph dataset containing over 636K videos with 6.6M objects, 52.0M attributes, and 6.7M relations, providing an order-of-magnitude increase in scale and diversity over prior spatio-temporal scene graph datasets.
           </p>
           <p>
-            Our approach augments neural radiance fields
-            (NeRF) by optimizing an
-            additional continuous volumetric deformation field that warps each observed point into a
-            canonical 5D NeRF.
-            We observe that these NeRF-like deformation fields are prone to local minima, and
-            propose a coarse-to-fine optimization method for coordinate-based models that allows for
-            more robust optimization.
-            By adapting principles from geometry processing and physical simulation to NeRF-like
-            models, we propose an elastic regularization of the deformation field that further
-            improves robustness.
+            To create SVG2, we design a fully automated pipeline that combines multi-scale panoptic segmentation, online-offline trajectory tracking with automatic new-object discovery, per-trajectory semantic parsing, and GPT-5-based spatio-temporal relation inference.
           </p>
           <p>
-            We show that <span class="dnerf">Nerfies</span> can turn casually captured selfie
-            photos/videos into deformable NeRF
-            models that allow for photorealistic renderings of the subject from arbitrary
-            viewpoints, which we dub <i>"nerfies"</i>. We evaluate our method by collecting data
-            using a
-            rig with two mobile phones that take time-synchronized photos, yielding train/validation
-            images of the same pose at different viewpoints. We show that our method faithfully
-            reconstructs non-rigidly deforming scenes and reproduces unseen views with high
-            fidelity.
+            Building on this resource, we train <strong>TRASER</strong>, a video scene graph generation model that augments VLM with a trajectory-aligned token arrangement mechanism and new modules: an object-trajectory resampler and a temporal-window resampler to convert raw videos and panoptic trajectories into compact spatio-temporal scene graphs in a single forward pass.
+          </p>
+          <p>
+            On PVSG, VIPSeg, VidOR and SVG2<sub>test</sub>, TRASER improves relation detection by +15~20%, object prediction by +30~40% over the strongest open-source baselines. When TRASER's generated scene graphs are sent to a VLM for video question answering, it delivers a +1.5~4.6% absolute accuracy gain, demonstrating the utility of explicit spatio-temporal scene graphs.
           </p>
         </div>
       </div>
     </div>
     <!--/ Abstract. -->
-
-    <!-- Paper video. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Video</h2>
-        <div class="publication-video">
-          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
-                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-    <!--/ Paper video. -->
   </div>
 </section>
 
 
+<!-- Pipeline Section -->
+<section class="section" style="background-color: #f5f5f5;">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Data Generation Pipeline</h2>
+        <div class="figure-container">
+          <img src="./static/images/pipeline.png" alt="Pipeline">
+        </div>
+        <div class="content has-text-justified">
+          <p>
+            Our fully automated pipeline integrates SAM2, Describe Anything Model (DAM), and GPT-5 to produce dense, temporally grounded video scene graphs:
+          </p>
+          <ul>
+            <li><strong>Phase 1: Panoptic Trajectory Generation</strong> - A two-stage online-offline tracking framework achieves dynamic object discovery and global temporal consistency using SAM2 with multi-scale grid prompts.</li>
+            <li><strong>Phase 2: Object Description and Parsing</strong> - DAM-3B-Video generates detailed descriptions for each track, then GPT-4-nano extracts object names and attributes. SAM3-based verification filters unreliable labels.</li>
+            <li><strong>Phase 3: Spatiotemporal Relation Extraction</strong> - GPT-5 infers inter-object relations including spatial, functional, stateful, motion, social, attentional, and event-level interactions.</li>
+          </ul>
+          <p>
+            Human verification on 100 sampled videos shows <strong>93.8%</strong> accuracy for object labels, <strong>79.0%</strong> for attributes, and <strong>85.4%</strong> for relations.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Dataset Section -->
 <section class="section">
   <div class="container is-max-desktop">
-
-    <div class="columns is-centered">
-
-      <!-- Visual Effects. -->
-      <div class="column">
-        <div class="content">
-          <h2 class="title is-3">Visual Effects</h2>
-          <p>
-            Using <i>nerfies</i> you can create fun visual effects. This Dolly zoom effect
-            would be impossible without nerfies since it would require going through a wall.
-          </p>
-          <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/dollyzoom-stacked.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-      </div>
-      <!--/ Visual Effects. -->
-
-      <!-- Matting. -->
-      <div class="column">
-        <h2 class="title is-3">Matting</h2>
-        <div class="columns is-centered">
-          <div class="column content">
-            <p>
-              As a byproduct of our method, we can also solve the matting problem by ignoring
-              samples that fall outside of a bounding box during rendering.
-            </p>
-            <video id="matting-video" controls playsinline height="100%">
-              <source src="./static/videos/matting.mp4"
-                      type="video/mp4">
-            </video>
-          </div>
-
-        </div>
-      </div>
-    </div>
-    <!--/ Matting. -->
-
-    <!-- Animation. -->
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">Animation</h2>
+        <h2 class="title is-3 has-text-centered">SVG2 Dataset</h2>
 
-        <!-- Interpolating. -->
-        <h3 class="title is-4">Interpolating states</h3>
         <div class="content has-text-justified">
           <p>
-            We can also animate the scene by interpolating the deformation latent codes of two input
-            frames. Use the slider here to linearly interpolate between the left frame and the right
-            frame.
+            SVG2 is the first large-scale video scene graph dataset with dense panoptic annotations. We sample <strong>43K</strong> videos from SA-V and <strong>590K</strong> videos from PVD, resulting in <strong>6.6M</strong> object instances, <strong>52M</strong> attributes, and <strong>6.7M</strong> spatiotemporal relations.
+          </p>
+          <p>
+            Additionally, we construct <strong>SVG2<sub>test</sub></strong>, a human-annotated benchmark of 100 videos with multi-granularity panoptic annotations following hierarchical human visual perception.
           </p>
         </div>
-        <div class="columns is-vcentered interpolation-panel">
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_start.jpg"
-                 class="interpolation-image"
-                 alt="Interpolate start reference image."/>
-            <p>Start Frame</p>
+
+        <!-- Dataset Comparison Table -->
+        <h3 class="title is-4">Comparison with Related Benchmarks</h3>
+        <div class="table-container">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Dataset</th>
+                <th>#Videos</th>
+                <th>Annotator</th>
+                <th>Type</th>
+                <th>Frame/ Vid</th>
+                <th>#Obj/ #Traj</th>
+                <th>Obj Cls</th>
+                <th>#Relations</th>
+                <th>Rel Cls</th>
+                <th>#Attributes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SA-V</td>
+                <td>50.9K</td>
+                <td>SAM-2 + Human</td>
+                <td>Seg<sub>S</sub></td>
+                <td>330</td>
+                <td>0.6M</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>VIPSeg</td>
+                <td>2.8K</td>
+                <td>Human</td>
+                <td>Seg<sub>S</sub></td>
+                <td>23</td>
+                <td>38.2K</td>
+                <td>124</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>VidVRD</td>
+                <td>0.8K</td>
+                <td>Human</td>
+                <td>Box<sub>S</sub></td>
+                <td>304</td>
+                <td>2.4K</td>
+                <td>35</td>
+                <td>25.9K</td>
+                <td>132</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>Action Genome</td>
+                <td>7.8K</td>
+                <td>Human</td>
+                <td>Box<sub>S</sub></td>
+                <td>808</td>
+                <td>26.2K</td>
+                <td>35</td>
+                <td>1.4M*</td>
+                <td>26</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>VidOR</td>
+                <td>7.0K</td>
+                <td>Human</td>
+                <td>Box<sub>D</sub></td>
+                <td>1K</td>
+                <td>34.6K</td>
+                <td>80</td>
+                <td>0.3M</td>
+                <td>50</td>
+                <td>-</td>
+              </tr>
+              <tr>
+                <td>PVSG</td>
+                <td>338</td>
+                <td>Human</td>
+                <td>Seg<sub>S</sub></td>
+                <td>375</td>
+                <td>6.3K</td>
+                <td>125</td>
+                <td>3.6K</td>
+                <td>62</td>
+                <td>-</td>
+              </tr>
+              <tr class="highlight-row">
+                <td><strong>SVG2 (Ours)</strong></td>
+                <td><strong>636K</strong></td>
+                <td>Our Pipeline</td>
+                <td>Seg<sub>D</sub></td>
+                <td>479</td>
+                <td><strong>6.6M</strong></td>
+                <td><strong>54.2K</strong></td>
+                <td><strong>6.7M</strong></td>
+                <td><strong>35.3K</strong></td>
+                <td><strong>52M</strong></td>
+              </tr>
+              <tr class="highlight-row">
+                <td><strong>SVG2<sub>test</sub></strong></td>
+                <td>100</td>
+                <td>Human</td>
+                <td>Seg<sub>D</sub></td>
+                <td>160</td>
+                <td>3.2K</td>
+                <td>749</td>
+                <td>3.3K</td>
+                <td>249</td>
+                <td>9.7K</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-caption">
+          <em>Subscripts S/D denote sparse (sampled) vs. dense (per-frame) annotations. (*) Action Genome reports total frame-level relation instances, whereas others report unique trajectory-level instances.</em>
+        </div>
+
+        <!-- Dataset Statistics Visualization -->
+        <h3 class="title is-4" style="margin-top: 2.5rem;">Dataset Statistics</h3>
+        <div class="has-text-centered">
+          <div class="stats-btn-container">
+            <button class="stats-btn active" onclick="showStats('objects')">Objects</button>
+            <button class="stats-btn" onclick="showStats('attributes')">Attributes</button>
+            <button class="stats-btn" onclick="showStats('relationships')">Relationships</button>
           </div>
-          <div class="column interpolation-video-column">
-            <div id="interpolation-image-wrapper">
-              Loading...
+
+          <div class="stats-display">
+            <!-- Objects Stats -->
+            <div id="stats-objects" class="stats-image active">
+              <img src="./static/images/dataset_stats/svg2_cleaned_objects.png" alt="Object Statistics" style="max-width: 90%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             </div>
-            <input class="slider is-fullwidth is-large is-info"
-                   id="interpolation-slider"
-                   step="1" min="0" max="100" value="0" type="range">
-          </div>
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_end.jpg"
-                 class="interpolation-image"
-                 alt="Interpolation end reference image."/>
-            <p class="is-bold">End Frame</p>
-          </div>
-        </div>
-        <br/>
-        <!--/ Interpolating. -->
 
-        <!-- Re-rendering. -->
-        <h3 class="title is-4">Re-rendering the input video</h3>
-        <div class="content has-text-justified">
-          <p>
-            Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
-            viewpoint such as a stabilized camera by playing back the training deformations.
-          </p>
-        </div>
-        <div class="content has-text-centered">
-          <video id="replay-video"
-                 controls
-                 muted
-                 preload
-                 playsinline
-                 width="75%">
-            <source src="./static/videos/replay.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <!--/ Re-rendering. -->
+            <!-- Attributes Stats -->
+            <div id="stats-attributes" class="stats-image">
+              <img src="./static/images/dataset_stats/svg2_cleaned_attributes.png" alt="Attribute Statistics" style="max-width: 90%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            </div>
 
+            <!-- Relationships Stats -->
+            <div id="stats-relationships" class="stats-image">
+              <div class="rel-btn-container">
+                <button class="rel-btn active" onclick="showRelStats('overview')">Overview</button>
+                <button class="rel-btn" onclick="showRelStats('spatial')">Spatial</button>
+                <button class="rel-btn" onclick="showRelStats('motion')">Motion</button>
+                <button class="rel-btn" onclick="showRelStats('functional')">Functional</button>
+                <button class="rel-btn" onclick="showRelStats('stateful')">Stateful</button>
+                <button class="rel-btn" onclick="showRelStats('social')">Social</button>
+                <button class="rel-btn" onclick="showRelStats('attentional')">Attentional</button>
+                <button class="rel-btn" onclick="showRelStats('event_level')">Event-level</button>
+              </div>
+              <div class="rel-images-container">
+                <img id="rel-overview" class="rel-image" src="./static/images/dataset_stats/svg2_cleaned_rel_overview.png" alt="Relationship Overview" style="max-width: 90%; display: block; margin: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img id="rel-spatial" class="rel-image" src="./static/images/dataset_stats/svg2_cleaned_rel_spatial.png" alt="Spatial Relations" style="max-width: 90%; display: none; margin: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img id="rel-motion" class="rel-image" src="./static/images/dataset_stats/svg2_cleaned_rel_motion.png" alt="Motion Relations" style="max-width: 90%; display: none; margin: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img id="rel-functional" class="rel-image" src="./static/images/dataset_stats/svg2_cleaned_rel_functional.png" alt="Functional Relations" style="max-width: 90%; display: none; margin: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img id="rel-stateful" class="rel-image" src="./static/images/dataset_stats/svg2_cleaned_rel_stateful.png" alt="Stateful Relations" style="max-width: 90%; display: none; margin: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img id="rel-social" class="rel-image" src="./static/images/dataset_stats/svg2_cleaned_rel_social.png" alt="Social Relations" style="max-width: 90%; display: none; margin: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img id="rel-attentional" class="rel-image" src="./static/images/dataset_stats/svg2_cleaned_rel_attentional.png" alt="Attentional Relations" style="max-width: 90%; display: none; margin: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img id="rel-event_level" class="rel-image" src="./static/images/dataset_stats/svg2_cleaned_rel_event_level.png" alt="Event-level Relations" style="max-width: 90%; display: none; margin: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <!--/ Animation. -->
+  </div>
+</section>
 
 
-    <!-- Concurrent Work. -->
+<!-- Model Section -->
+<section class="section" style="background-color: #f5f5f5;">
+  <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">Related Links</h2>
-
+        <h2 class="title is-3 has-text-centered">TRASER Model</h2>
+        <div class="figure-container">
+          <img src="./static/images/model.png" alt="TRASER Model Architecture">
+        </div>
         <div class="content has-text-justified">
           <p>
-            There's a lot of excellent work that was introduced around the same time as ours.
+            <strong>TRASER</strong> is a VLM that produces structured video scene graphs in one forward pass from raw videos and panoptic object trajectories.
           </p>
+          <h4>Key Components:</h4>
+          <ul>
+            <li><strong>Trajectory-Aligned Token Arrangement:</strong> Binds ViT tokens to object trajectories based on segmentation coverage, producing identity-preserving token streams with explicit trajectory boundaries.</li>
+            <li><strong>Object-Trajectory Resampler:</strong> Aggregates global semantics over each object's entire temporal span using Perceiver-Resampler with learnable latent queries.</li>
+            <li><strong>Temporal-Window Resampler:</strong> Partitions video into temporal windows and resamples each window independently, preserving fine-grained motion and temporal dynamics crucial for relation detection.</li>
+          </ul>
           <p>
-            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
-          </p>
-          <p>
-            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
-            both use deformation fields to model non-rigid scenes.
-          </p>
-          <p>
-            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
-          </p>
-          <p>
-            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
+            The dual resampler design balances global object context with local temporal grounding, enabling accurate prediction of both object attributes and temporally-localized relations.
           </p>
         </div>
       </div>
     </div>
-    <!--/ Concurrent Work. -->
+  </div>
+</section>
 
+
+<!-- Results Section -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Results</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            We evaluate TRASER against leading proprietary and open-source VLMs on four benchmarks using panoptic object trajectories as input. TRASER outperforms all open-source baselines and surpasses GPT-5 in both object and attribute prediction.
+          </p>
+        </div>
+
+        <!-- Main Results Table -->
+        <h3 class="title is-4">Video Scene Graph Generation Results</h3>
+        <div class="table-container">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="min-width: 140px;">Model</th>
+                <th colspan="3" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Triplet</th>
+                <th colspan="3" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">Relation</th>
+                <th colspan="4" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">Object</th>
+                <th style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">Attr</th>
+                <th rowspan="2">Rank</th>
+              </tr>
+              <tr>
+                <th>PVSG</th>
+                <th>VidOR</th>
+                <th>SVG2<sub>t</sub></th>
+                <th>PVSG</th>
+                <th>VidOR</th>
+                <th>SVG2<sub>t</sub></th>
+                <th>VIPSeg</th>
+                <th>PVSG</th>
+                <th>VidOR</th>
+                <th>SVG2<sub>t</sub></th>
+                <th>SVG2<sub>t</sub></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="13" class="section-header">Proprietary Models (API)</td>
+              </tr>
+              <tr>
+                <td>GPT-4.1</td>
+                <td>6.0</td>
+                <td>10.8</td>
+                <td>6.4</td>
+                <td>7.3</td>
+                <td>11.9</td>
+                <td>7.5</td>
+                <td>59.9</td>
+                <td>51.4</td>
+                <td>86.6</td>
+                <td>58.5</td>
+                <td>15.8</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>Gemini-2.5 Pro</td>
+                <td>7.4</td>
+                <td>9.8</td>
+                <td>8.7</td>
+                <td>8.8</td>
+                <td>11.0</td>
+                <td>9.9</td>
+                <td>56.7</td>
+                <td>31.7</td>
+                <td>82.9</td>
+                <td>49.8</td>
+                <td>13.6</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>GPT-5</td>
+                <td class="best">16.6</td>
+                <td class="second">19.7</td>
+                <td class="best">17.9</td>
+                <td class="best">18.3</td>
+                <td class="second">21.7</td>
+                <td class="best">19.4</td>
+                <td class="second">68.1</td>
+                <td class="second">54.2</td>
+                <td class="second">88.5</td>
+                <td class="second">65.5</td>
+                <td class="second">24.1</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td colspan="13" class="section-header">Open-Source Models</td>
+              </tr>
+              <tr>
+                <td>Qwen2.5-VL-3B</td>
+                <td>0.1</td>
+                <td>0.2</td>
+                <td>0.2</td>
+                <td>0.1</td>
+                <td>0.4</td>
+                <td>0.3</td>
+                <td>22.1</td>
+                <td>10.4</td>
+                <td>45.0</td>
+                <td>24.2</td>
+                <td>1.4</td>
+                <td>12</td>
+              </tr>
+              <tr>
+                <td>MiniCPM-V 4.5</td>
+                <td>0.1</td>
+                <td>3.0</td>
+                <td>1.1</td>
+                <td>0.2</td>
+                <td>4.0</td>
+                <td>2.4</td>
+                <td>40.0</td>
+                <td>14.3</td>
+                <td>59.1</td>
+                <td>38.5</td>
+                <td>8.4</td>
+                <td>8</td>
+              </tr>
+              <tr>
+                <td>InternVL3.5-4B</td>
+                <td>0.2</td>
+                <td>0.4</td>
+                <td>0.1</td>
+                <td>0.3</td>
+                <td>0.5</td>
+                <td>0.2</td>
+                <td>33.7</td>
+                <td>20.4</td>
+                <td>66.4</td>
+                <td>35.0</td>
+                <td>7.4</td>
+                <td>11</td>
+              </tr>
+              <tr>
+                <td>GLM-4.1-9B-Thinking</td>
+                <td>0.3</td>
+                <td>3.9</td>
+                <td>1.8</td>
+                <td>0.5</td>
+                <td>5.0</td>
+                <td>2.9</td>
+                <td>46.5</td>
+                <td>17.8</td>
+                <td>61.1</td>
+                <td>28.5</td>
+                <td>9.1</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <td>Qwen3-VL-4B</td>
+                <td>0.1</td>
+                <td>0.7</td>
+                <td>1.4</td>
+                <td>0.1</td>
+                <td>0.8</td>
+                <td>1.6</td>
+                <td>34.1</td>
+                <td>21.8</td>
+                <td>65.8</td>
+                <td>35.6</td>
+                <td>8.3</td>
+                <td>10</td>
+              </tr>
+              <tr>
+                <td>Qwen3-VL-4B-Thinking</td>
+                <td>0.1</td>
+                <td>2.3</td>
+                <td>3.3</td>
+                <td>0.4</td>
+                <td>3.4</td>
+                <td>3.6</td>
+                <td>35.8</td>
+                <td>18.3</td>
+                <td>67.6</td>
+                <td>37.1</td>
+                <td>8.8</td>
+                <td>7</td>
+              </tr>
+              <tr>
+                <td>FT-Qwen2.5-VL-3B (1st Bbox)</td>
+                <td>0.1</td>
+                <td>1.6</td>
+                <td>0.1</td>
+                <td>0.9</td>
+                <td>4.5</td>
+                <td>0.5</td>
+                <td>25.5</td>
+                <td>25.9</td>
+                <td>51.7</td>
+                <td>36.7</td>
+                <td>10.4</td>
+                <td>9</td>
+              </tr>
+              <tr>
+                <td>FT-Qwen2.5-VL-3B (Bbox Traj.)</td>
+                <td>0.5</td>
+                <td>1.8</td>
+                <td>1.4</td>
+                <td>1.6</td>
+                <td>4.2</td>
+                <td>3.0</td>
+                <td>35.1</td>
+                <td>33.6</td>
+                <td>56.9</td>
+                <td>46.1</td>
+                <td>13.4</td>
+                <td>5</td>
+              </tr>
+              <tr class="ours-row">
+                <td><strong>TRASER (Ours)</strong></td>
+                <td class="second">16.1</td>
+                <td class="best">22.9</td>
+                <td class="second">16.7</td>
+                <td class="second">16.9</td>
+                <td class="best">25.0</td>
+                <td class="second">18.7</td>
+                <td class="best">86.5</td>
+                <td class="best">72.7</td>
+                <td class="best">91.4</td>
+                <td class="best">79.0</td>
+                <td class="best">27.1</td>
+                <td><strong>1</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-caption">
+          For triplet and relation recall, we adopt an IoU threshold of 0.5. <strong style="color: #276749;">Bold green</strong> indicates best performance, <u>underline</u> indicates second best. SVG2<sub>t</sub> = SVG2<sub>test</sub>.
+        </div>
+
+
+
+        <!-- VQA Results Table -->
+        <h3 class="title is-4" style="margin-top: 2.5rem;">Video Question Answering with Scene Graphs</h3>
+        <div class="content has-text-justified">
+          <p>
+            We assess the utility of structured video scene graphs for downstream video QA tasks. High-quality scene graphs from TRASER consistently improve GPT-4.1's VQA accuracy compared to video-only or Qwen2.5-VL augmented inputs.
+          </p>
+        </div>
+        <div class="table-container">
+          <table class="comparison-table" style="max-width: 700px; margin: 0 auto;">
+            <thead>
+              <tr>
+                <th>Benchmark</th>
+                <th>Video Only</th>
+                <th>Video + Qwen2.5-VL's VSG</th>
+                <th>Video + TRASER's VSG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AGQA 2.0</td>
+                <td>25.9</td>
+                <td>24.8</td>
+                <td class="best">26.3</td>
+              </tr>
+              <tr>
+                <td>Perception-Test</td>
+                <td>66.8</td>
+                <td>68.6</td>
+                <td class="best">71.4</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-caption">
+          GPT-4.1 VQA accuracy (%) with different inputs. Incorporating TRASER's video scene graphs consistently improves performance, demonstrating the value of structured spatiotemporal representations.
+        </div>
+
+        <!-- Key Findings -->
+        <h3 class="title is-4" style="margin-top: 2.5rem;">
+            <!-- Key Findings -->
+        </h3>
+        <div class="content key-findings">
+          <ul>
+            <li>TRASER outperforms open-source baselines by <strong>+10%</strong> in triplet detection, <strong>+15%</strong> in relation detection, and <strong>+40%</strong> in object prediction.</li>
+            <li>TRASER surpasses GPT-5 on object prediction (<strong>+13%</strong>) and attribute prediction (<strong>+3%</strong>).</li>
+            <li>When TRASER's scene graphs are used for video QA, they provide <strong>+1.5~4.6%</strong> accuracy gains over video-only inputs and outperform Qwen2.5-VL augmented scene graphs.</li>
+          </ul>
+        </div>
+
+        <!-- More Results Link -->
+        <div class="has-text-centered" style="margin-top: 2rem;">
+          <a href="https://arxiv.org/" class="button is-medium is-link is-outlined" style="border-radius: 25px; font-weight: 600;">
+            <span class="icon">
+              <i class="fas fa-arrow-right"></i>
+            </span>
+            <span>More Results in Our Paper</span>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -444,11 +997,10 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{park2021nerfies,
-  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
-  title     = {Nerfies: Deformable Neural Radiance Fields},
-  journal   = {ICCV},
-  year      = {2021},
+    <pre><code>@article{gao2026svg2,
+  author    = {Gao, Ziqi and Zhang, Jieyu and Ikezogwo, Wisdom Oluchi and Park, Jae Sung and You, Tario G and Ogbu, Daniel and Zheng, Chenhao and Huang, Weikai and Yang, Yinuo and Han, Winson and Kong, Quan and Saini, Rajat and Krishna, Ranjay},
+  title     = {Synthetic Visual Genome 2: Extracting Large-scale Spatio-Temporal Scene Graphs from Videos},
+  year      = {2026},
 }</code></pre>
   </div>
 </section>
@@ -458,10 +1010,10 @@
   <div class="container">
     <div class="content has-text-centered">
       <a class="icon-link"
-         href="./static/videos/nerfies_paper.pdf">
+         href="https://arxiv.org/">
         <i class="fas fa-file-pdf"></i>
       </a>
-      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+      <a class="icon-link" href="https://github.com/" class="external-link" disabled>
         <i class="fab fa-github"></i>
       </a>
     </div>
@@ -474,17 +1026,35 @@
             Commons Attribution-ShareAlike 4.0 International License</a>.
           </p>
           <p>
-            This means you are free to borrow the <a
-              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
-            we just ask that you link back to this page in the footer.
-            Please remember to remove the analytics code included in the header of the website which
-            you do not want on your website.
+            Website template borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
           </p>
         </div>
       </div>
     </div>
   </div>
 </footer>
+
+<script>
+  function showStats(type) {
+    // Update buttons
+    document.querySelectorAll('.stats-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Update images
+    document.querySelectorAll('.stats-image').forEach(img => img.classList.remove('active'));
+    document.getElementById('stats-' + type).classList.add('active');
+  }
+
+  function showRelStats(type) {
+    // Update buttons
+    document.querySelectorAll('.rel-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Update images
+    document.querySelectorAll('.rel-image').forEach(img => img.style.display = 'none');
+    document.getElementById('rel-' + type).style.display = 'block';
+  }
+</script>
 
 </body>
 </html>
