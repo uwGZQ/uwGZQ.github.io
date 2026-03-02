@@ -8,7 +8,7 @@
 ## 📝 Publications
 (* denotes equal contribution, + denotes corresponding author)
 ### Preprints
-- [Synthetic Visual Genome 2: Extracting Large-scale Spatio-Temporal Scene Graphs from Videos](https://arxiv.org/abs/2602.23543)
+- [Synthetic Visual Genome 2: Extracting Large-scale Spatio-Temporal Scene Graphs from Videos](https://arxiv.org/pdf/2602.23543)
 <br>**Ziqi Gao**, Jieyu Zhang, Wisdom Oluchi Ikezogwo, Jae Sung Park, Tario G. You, Daniel Ogbu, Chenhao Zheng, Weikai Huang, Yinuo Yang, Winson Han, Quan Kong, Rajat Saini, Ranjay Krishna\+.<br>
 
 ### Peer-reviewed
