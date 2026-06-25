@@ -9,12 +9,12 @@
 (* denotes equal contribution, + denotes corresponding author)
 ### Preprints
 - [Vision-Language Grounding as Bidirectional Concept Correspondence](https://uwgzq.github.io)
-<br>Jieyu Zhang*, **Ziqi Gao\***, Luke Zettlemoyer, Ranjay Krishna\+.<br>
-
-- [Synthetic Visual Genome 2: Extracting Large-scale Spatio-Temporal Scene Graphs from Videos](https://arxiv.org/abs/2602.23543)
-<br>**Ziqi Gao**, Jieyu Zhang, Wisdom Oluchi Ikezogwo, Jae Sung Park, Tario G. You, Daniel Ogbu, Chenhao Zheng, Weikai Huang, Yinuo Yang, Winson Han, Quan Kong, Rajat Saini, Ranjay Krishna\+.<br>
+<br>Jieyu Zhang\*, **Ziqi Gao\***, Luke Zettlemoyer, Ranjay Krishna\+.<br>
 
 ### Peer-reviewed
+- [Synthetic Visual Genome 2: Extracting Large-scale Spatio-Temporal Scene Graphs from Videos](https://arxiv.org/abs/2602.23543)
+<br>**Ziqi Gao**, Jieyu Zhang, Wisdom Oluchi Ikezogwo, Jae Sung Park, Tario G. You, Daniel Ogbu, Chenhao Zheng, Weikai Huang, Yinuo Yang, Winson Han, Quan Kong, Rajat Saini, Ranjay Krishna\+.<br><ins>*ECCV 2026*</ins>
+
 - [Molmo2: Open Weights and Data for Vision-Language Models with Video Understanding and Grounding](https://arxiv.org/abs/2601.10611)
 <br>Christopher Clark, Jieyu Zhang, Zixian Ma, Jae Sung Park, Mohammadreza Salehi, Rohun Tripathi, Sangho Lee, Jason Ren, Chris Dongjoo Kim, Yinuo Yang, Vincent Shao, Yue Yang, Weikai Huang, **Ziqi Gao**, Taira Anderson, Jianrui Zhang, Jitesh Jain, George Stoica, Winston Han, Ali Farhadi, Ranjay Krishna\+.<br><ins>*CVPR 2026*</ins>
 
