@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="ConCor-1: Vision-Language Grounding as Bidirectional Concept Correspondence. Given an image and its paired text, recover all correspondences between visually referential text spans and instance-level image segments.">
+  <meta name="keywords" content="ConCor-1, concept correspondence, vision-language grounding, phrase grounding, referring expression grounding, open-vocabulary segmentation, bridge tokens">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ConCor-1: Vision-Language Grounding as Bidirectional Concept Correspondence</title>
+
+  <meta property="og:title" content="Vision-Language Grounding as Bidirectional Concept Correspondence">
+  <meta property="og:description" content="ConCor-1 recovers all correspondences between visually referential text spans and instance-level image segments in an image-text pair.">
+  <meta property="og:image" content="https://uwgzq.github.io/papers/ConCor-1/static/images/task.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <style>
+    /* Wider than Bulma's is-max-desktop (960px): the schematic figures and the
+       19-column result tables are unreadable at that width. */
+    .wide {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ── Figures ───────────────────────────────────────────────────────── */
+    .figure {
+      margin: 1.5rem auto 2rem auto;
+      text-align: center;
+    }
+    .figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+    /* The qualitative figures are low-resolution sources, so they are held well
+       below their native width and downsample instead of blurring. */
+    .figure.narrow img { max-width: 620px; }
+    .figure.tall img   { max-width: 500px; }
+    .figure figcaption {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #4a4a4a;
+      margin: 1rem auto 0 auto;
+      max-width: 950px;
+      text-align: justify;
+    }
+    .figure figcaption .lead { font-weight: 700; color: #363636; }
+
+    /* ── Tables ────────────────────────────────────────────────────────── */
+    .table-scroll { overflow-x: auto; margin: 1.2rem 0 0.6rem 0; }
+    .paper-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      background: white;
+      white-space: nowrap;
+    }
+    .paper-table th, .paper-table td { padding: 8px 9px; text-align: center; border: none; }
+    .paper-table thead tr:first-child th {
+      border-bottom: 1px solid #b5b5b5;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #363636;
+      padding-bottom: 5px;
+    }
+    .paper-table thead tr:first-child th[colspan] { border-bottom: 1px solid #363636; }
+    .paper-table thead tr:nth-child(2) th {
+      border-bottom: 1px solid #363636;
+      font-weight: 600;
+      font-size: 0.82rem;
+      color: #555;
+    }
+    .paper-table tbody tr:first-child td { padding-top: 10px; }
+    .paper-table tbody tr:last-child td { border-bottom: 1px solid #363636; }
+    .paper-table td:first-child, .paper-table th:first-child {
+      text-align: left;
+      padding-left: 4px;
+      padding-right: 18px;
+    }
+    .paper-table .group-sep { border-left: 1px solid #dbdbdb; }
+    .paper-table .rule-above td { border-top: 1px solid #b5b5b5; padding-top: 10px; }
+    .paper-table tbody tr:hover { background-color: #f7f9fc; }
+    .paper-table .best { font-weight: 700; }
+    .paper-table .ours td { background-color: #eef1f5; }
+    .paper-table .ours:hover td { background-color: #e4e9f0; }
+    .table-caption {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #4a4a4a;
+      margin-top: 0.7rem;
+    }
+    .table-caption .lead { font-weight: 700; color: #363636; }
+
+    /* ── Prediction / findings lists ───────────────────────────────────── */
+    .plain-list { list-style: none; margin-left: 0 !important; }
+    .plain-list li {
+      padding: 0.45rem 0 0.45rem 1.1rem;
+      border-left: 3px solid #dbdbdb;
+      margin-bottom: 0.5rem;
+      line-height: 1.65;
+    }
+    .plain-list li strong { color: #363636; }
+
+    .findings li {
+      padding: 0.5rem 0 0.5rem 1.1rem;
+      border-left: 3px solid #3273dc;
+      margin-bottom: 0.6rem;
+      line-height: 1.65;
+      list-style: none;
+    }
+    .findings { margin-left: 0 !important; }
+    .findings li em { font-weight: 600; font-style: normal; color: #363636; }
+
+    .subhead {
+      font-weight: 700;
+      color: #363636;
+      margin-top: 1.7rem;
+      margin-bottom: 0.4rem;
+      font-size: 1.05rem;
+    }
+
+    @media screen and (max-width: 768px) {
+      .paper-table { font-size: 0.78rem; }
+      .paper-table th, .paper-table td { padding: 5px 5px; }
+      .figure figcaption { max-width: 100%; }
+    }
+
+    /* ── ConCor-1 section ──────────────────────────────────────────────────
+       Declared after the generic .figure rules so .model-figure figcaption,
+       which has the same specificity, wins. */
+    .model-figure {
+      margin-bottom: 2rem;
+    }
+
+    .model-figure figcaption {
+      max-width: 900px;
+      margin: 0.7rem auto 0;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      color: #666;
+    }
+
+    .model-figure .lead {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .model-summary {
+      max-width: 880px;
+      margin: 0 auto 1.5rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: #444;
+    }
+
+    .prediction-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .prediction-card {
+      padding: 1.25rem 1.35rem;
+      background: #fff;
+      border: 1px solid #e4e6ea;
+      border-radius: 10px;
+    }
+
+    .prediction-title {
+      margin-bottom: 0.45rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .prediction-card p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: #555;
+    }
+
+    .training-note {
+      max-width: 880px;
+      margin: 1.4rem auto 0;
+      padding: 0.8rem 1rem;
+      border-left: 3px solid #d7d9dd;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: #555;
+    }
+
+    @media (max-width: 768px) {
+      .prediction-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ Title ══════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">
+            Vision-Language Grounding as Bidirectional Concept Correspondence
+          </h1>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://jieyuz2.github.io">Jieyu Zhang</a><sup>1</sup>*,</span>
+            <span class="author-block">
+              <a href="https://uwgzq.github.io">Ziqi Gao</a><sup>1,2</sup>*,</span>
+            <span class="author-block">
+              <a href="https://www.cs.washington.edu/people/faculty/lsz">Luke Zettlemoyer</a><sup>1,3</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.ranjaykrishna.com/index.html">Ranjay Krishna</a><sup>1</sup></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>University of Washington,</span>
+            <span class="author-block"><sup>2</sup>Allen Institute for AI,</span>
+            <span class="author-block"><sup>3</sup>FAIR at Meta</span>
+          </div>
+          <div class="is-size-6" style="color:#7a7a7a;margin-top:4px;">*Equal contribution</div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark"
+                   style="opacity:0.55;pointer-events:none;">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>arXiv (coming soon)</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/uwGZQ/ConCor-1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://huggingface.co/UWGZQ/ConCor-1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span style="margin-right:6px;">&#129303;</span>
+                  <span>Model</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://huggingface.co/datasets/UWGZQ/ConCor-1-Data"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="far fa-images"></i></span>
+                  <span>Data</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://huggingface.co/spaces/UWGZQ/ConCor-1-demo"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-play"></i></span>
+                  <span>Demo</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ Teaser ═════════════════════════════════════════════════════════════ -->
+<section class="hero teaser">
+  <div class="wide">
+    <div class="hero-body" style="padding-left:0;padding-right:0;">
+      <figure class="figure" style="margin-top:0;">
+        <img src="./static/images/task.jpg"
+             alt="Bidirectional concept correspondence over an image paired with a caption, a referring expression, or a list of category names.">
+        <figcaption>
+          <span class="lead">Bidirectional concept correspondence.</span>
+          Given an image paired with different forms of text, including a full caption, a referring
+          expression, or a list of category names, the concept correspondence model predicts a complete
+          set of correspondences between text segments and image segments. For each correspondence, the
+          model identifies the visually grounded text span, including repeated or coreferential
+          mentions, and localizes the corresponding instance-level mask in the image.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ Abstract ═══════════════════════════════════════════════════════════ -->
+<section class="section" style="padding-top:1rem;">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Vision-language grounding connects language to visual content, yet most existing formulations
+            reduce grounding to a unidirectional localization problem; given a prespecified text phrase or
+            category name, identify the corresponding image region. This setup assumes that the relevant
+            linguistic unit is already known, overlooking a more basic challenge in grounded communication:
+            determining which parts of the text are visually referential and how they correspond to entities
+            in the image.
+          </p>
+          <p>
+            We formulate grounding as <em>bidirectional concept correspondence</em> over an image-text pair.
+            Given an image and its paired text, the goal is to recover all correspondences between visually
+            referential text spans and instance-level image segments, without assuming that the relevant text
+            spans are provided. This formulation unifies common grounding tasks, including phrase grounding,
+            referring expression grounding, and open-vocabulary detection by treating text segmentation, image
+            segmentation, and cross-modal alignment as a single correspondence prediction problem.
+          </p>
+          <p>
+            To address this task, we introduce <strong>ConCor-1</strong>, a grounding model built on top of a
+            pretrained vision-language model. It uses learnable <em>bridge tokens</em> to represent candidate
+            image-text correspondences and predicts, for each token, a text mask, an image mask, and a
+            correspondence presence score. To train and evaluate this task, we convert diverse grounding and
+            segmentation datasets into a unified correspondence format. Experiments show that ConCor-1
+            consistently outperforms baselines, improving correspondence F1 by <strong>48%</strong> on the
+            long-caption dataset and by <strong>29%</strong> on zero-shot LVIS, where the large category list
+            serves as the text input.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ ConCor-1 ═══════════════════════════════════════════════════════════ -->
+<section class="section" style="background-color:#f7f8fa;">
+  <div class="wide">
+    <h2 class="title is-3 has-text-centered">ConCor-1</h2>
+
+    <figure class="figure model-figure">
+      <img src="./static/images/model.jpg" alt="ConCor-1 model overview.">
+      <figcaption>
+        <span class="lead">Model overview.</span>
+        ConCor-1 introduces learnable bridge tokens to represent candidate
+        image&ndash;text correspondences. Each bridge token jointly predicts
+        a text mask, an image mask, and a correspondence presence score.
+      </figcaption>
+    </figure>
+
+    <div class="columns is-centered">
+      <div class="column is-10">
+
+        <p class="model-summary">
+          Built on a pretrained <strong>Qwen3.5-0.8B VLM</strong>, ConCor-1 performs
+          <strong>non-autoregressive correspondence prediction</strong>.
+          Bridge tokens attend jointly to image and text tokens, with each token
+          representing one candidate image&ndash;text correspondence.
+        </p>
+
+        <div class="prediction-grid">
+          <div class="prediction-card">
+            <div class="prediction-title">Text Mask</div>
+            <p>
+              Identifies the text tokens belonging to the correspondence,
+              including repeated or co-referring mentions.
+            </p>
+          </div>
+          <div class="prediction-card">
+            <div class="prediction-title">Image Mask</div>
+            <p>
+              Predicts the corresponding instance-level segment with
+              fine spatial detail.
+            </p>
+          </div>
+          <div class="prediction-card">
+            <div class="prediction-title">Presence Score</div>
+            <p>
+              Determines whether the bridge token represents a valid
+              text&ndash;image correspondence.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="training-note">
+          <strong>Training.</strong>
+          Ground-truth correspondences are assigned to bridge tokens using
+          Hungarian matching with multi-scale spatial priors.
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ══ Data ═══════════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Concept Correspondence Data</h2>
+
+        <div class="content has-text-justified">
+          <p class="subhead" style="margin-top:0;">Repurposing existing grounded-caption datasets</p>
+          <p>
+            Existing grounded-caption datasets are not directly compatible with bidirectional correspondence:
+            co-referring mentions are typically annotated only at first occurrence, and some mentioned
+            entities have no image mask at all. We use an LLM rewriting pipeline that groups co-referring
+            mentions into shared text masks and removes mentions without an associated mask, yielding complete
+            correspondence annotations. Validation benchmarks are then human-filtered.
+          </p>
+
+          <p class="subhead">Training data</p>
+          <p>
+            Training combines <strong>caption-style grounding data</strong> with <strong>instance-segmentation data</strong>. Caption-style data provides free-form language with grounded entities, while segmentation data provides dense instance-level supervision. Box- or point-based annotations are converted to masks when needed.
+          </p>
+          <!-- <p>
+            In total, the caption side contributes <strong>653K</strong> image-text pairs over
+            <strong>184K</strong> unique images, carrying <strong>3.1M</strong> correspondences over
+            <strong>4.2M</strong> instance masks; the instance side contributes <strong>614K</strong> images
+            with <strong>7.8M</strong> instance masks.
+          </p> -->
+
+          <p style="font-size:0.9rem;color:#6a6a6a;margin-top:1.6rem;">
+            The converted data is released as
+            <a href="https://huggingface.co/datasets/UWGZQ/ConCor-1-Data">UWGZQ/ConCor-1-Data</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ Results ════════════════════════════════════════════════════════════ -->
+<section class="section" style="background-color:#f7f8fa;">
+  <div class="wide">
+    <h2 class="title is-3 has-text-centered">Results</h2>
+
+    <div class="columns is-centered">
+      <div class="column is-10">
+        <div class="content has-text-justified">
+          <p>
+            We evaluate on three repurposed image-caption benchmarks &mdash; COCONut-PanCap, GroundedRef and
+            Flickr30k &mdash; and three image-category benchmarks &mdash; COCO, LVIS-minival and EntitySeg
+            &mdash; where the whole category vocabulary is concatenated into a single text input.
+          </p>
+          <p>
+            Predictions are matched to ground truth with Hungarian matching and evaluated at three levels: text (TextF1, mSpanIoU), image (MaskF1, mMaskIoU), and joint correspondence (JointF1, mJS). TextF1 and MaskF1 require the corresponding IoU to be ≥ 0.5, while JointF1 requires both text and mask IoU to be ≥ 0.5.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table 1: image-caption -->
+    <div class="table-scroll">
+      <table class="paper-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th colspan="6">COCONut-PanCap</th>
+            <th colspan="6" class="group-sep">GroundedRef</th>
+            <th colspan="6" class="group-sep">Flickr30k</th>
+          </tr>
+          <tr>
+            <th>Method</th>
+            <th>JointF1</th><th>MaskF1</th><th>TextF1</th><th>mJS</th><th>mMaskIoU</th><th>mSpanIoU</th>
+            <th class="group-sep">JointF1</th><th>MaskF1</th><th>TextF1</th><th>mJS</th><th>mMaskIoU</th><th>mSpanIoU</th>
+            <th class="group-sep">JointF1</th><th>MaskF1</th><th>TextF1</th><th>mJS</th><th>mMaskIoU</th><th>mSpanIoU</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GDINO+SAM</td>
+            <td>34.1</td><td>64.8</td><td>39.8</td><td>48.0</td><td>67.9</td><td>44.2</td>
+            <td class="group-sep">45.0</td><td>56.4</td><td>50.9</td><td>37.8</td><td>44.2</td><td>39.7</td>
+            <td class="group-sep">81.6</td><td>85.2</td><td>86.7</td><td>81.9</td><td>86.9</td><td>81.5</td>
+          </tr>
+          <tr>
+            <td>MM-GDINO+SAM</td>
+            <td>32.2</td><td>59.5</td><td>37.4</td><td>51.1</td><td>70.8</td><td>47.4</td>
+            <td class="group-sep">39.8</td><td>58.1</td><td>44.3</td><td>31.9</td><td>44.2</td><td>33.3</td>
+            <td class="group-sep">84.6</td><td>87.7</td><td>89.6</td><td>82.6</td><td>87.3</td><td>82.3</td>
+          </tr>
+          <tr>
+            <td>LLMDet+SAM</td>
+            <td>31.5</td><td>52.8</td><td>37.9</td><td>59.1</td><td>75.4</td><td>55.7</td>
+            <td class="group-sep">54.6</td><td>69.0</td><td>62.8</td><td>68.1</td><td class="best">77.9</td><td>70.1</td>
+            <td class="group-sep">76.7</td><td>79.6</td><td>85.4</td><td>75.3</td><td>78.7</td><td>77.1</td>
+          </tr>
+          <tr>
+            <td>GPT-5.4 (medium)+SAM</td>
+            <td>43.8</td><td>47.4</td><td>88.9</td><td>48.6</td><td>43.5</td><td>82.7</td>
+            <td class="group-sep">25.5</td><td>37.5</td><td>68.2</td><td>33.9</td><td>34.3</td><td>70.8</td>
+            <td class="group-sep">37.3</td><td>43.4</td><td>86.6</td><td>44.7</td><td>41.4</td><td>87.0</td>
+          </tr>
+          <tr>
+            <td>Florence-2</td>
+            <td>36.7</td><td>53.4</td><td>53.6</td><td>47.9</td><td>55.8</td><td>56.7</td>
+            <td class="group-sep">52.6</td><td>61.2</td><td>79.2</td><td>56.4</td><td>55.2</td><td>77.7</td>
+            <td class="group-sep">68.7</td><td>70.1</td><td>92.8</td><td>69.4</td><td>61.6</td><td>88.9</td>
+          </tr>
+          <tr>
+            <td>GLaMM</td>
+            <td>2.5</td><td>39.1</td><td>3.0</td><td>11.9</td><td>27.4</td><td>8.0</td>
+            <td class="group-sep">6.1</td><td>47.3</td><td>10.0</td><td>18.4</td><td>32.8</td><td>16.9</td>
+            <td class="group-sep">53.1</td><td>69.1</td><td>59.5</td><td>55.4</td><td>60.3</td><td>58.2</td>
+          </tr>
+          <tr>
+            <td>Qwen3.5-FT</td>
+            <td>59.9</td><td>63.4</td><td>93.1</td><td>63.3</td><td>55.6</td><td>87.9</td>
+            <td class="group-sep">51.5</td><td>56.3</td><td class="best">82.1</td><td>49.7</td><td>45.8</td><td>77.5</td>
+            <td class="group-sep">70.2</td><td>72.6</td><td class="best">95.2</td><td>69.1</td><td>60.3</td><td>95.1</td>
+          </tr>
+          <tr class="rule-above">
+            <td>ConCor-1 (random init.)</td>
+            <td>51.8</td><td>59.4</td><td>67.6</td><td>63.2</td><td>63.6</td><td>77.9</td>
+            <td class="group-sep">32.4</td><td>43.4</td><td>56.9</td><td>44.6</td><td>48.1</td><td>70.5</td>
+            <td class="group-sep">55.0</td><td>61.1</td><td>72.7</td><td>64.4</td><td>62.3</td><td>83.7</td>
+          </tr>
+          <tr class="ours">
+            <td><strong>ConCor-1</strong></td>
+            <td class="best">88.8</td><td class="best">91.9</td><td class="best">93.4</td><td class="best">89.5</td><td class="best">87.0</td><td class="best">95.7</td>
+            <td class="group-sep best">70.3</td><td class="best">76.4</td><td>78.7</td><td class="best">69.6</td><td>68.8</td><td class="best">78.7</td>
+            <td class="group-sep best">91.4</td><td class="best">92.4</td><td>95.1</td><td class="best">91.8</td><td class="best">88.6</td><td class="best">97.4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-caption">
+      <span class="lead">Table 1.</span>
+      Image-caption results on the COCONut-PanCap, GroundedRef and Flickr30k validation sets.
+    </div>
+
+    <!-- Table 2: image-category -->
+    <div class="table-scroll" style="margin-top:2.8rem;">
+      <table class="paper-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th colspan="6">COCO</th>
+            <th colspan="6" class="group-sep">LVIS-minival</th>
+            <th colspan="6" class="group-sep">EntitySeg</th>
+          </tr>
+          <tr>
+            <th>Method</th>
+            <th>JointF1</th><th>MaskF1</th><th>TextF1</th><th>mJS</th><th>mMaskIoU</th><th>mSpanIoU</th>
+            <th class="group-sep">JointF1</th><th>MaskF1</th><th>TextF1</th><th>mJS</th><th>mMaskIoU</th><th>mSpanIoU</th>
+            <th class="group-sep">JointF1</th><th>MaskF1</th><th>TextF1</th><th>mJS</th><th>mMaskIoU</th><th>mSpanIoU</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GDINO+SAM</td>
+            <td>63.0</td><td>66.5</td><td>73.3</td><td>76.0</td><td>71.3</td><td>90.7</td>
+            <td class="group-sep">15.3</td><td>22.4</td><td>17.7</td><td>33.1</td><td>47.8</td><td>35.7</td>
+            <td class="group-sep">21.5</td><td>30.6</td><td>27.0</td><td>36.9</td><td>45.5</td><td>43.3</td>
+          </tr>
+          <tr>
+            <td>MM-GDINO+SAM</td>
+            <td>65.7</td><td>68.7</td><td>75.6</td><td>77.1</td><td>72.0</td><td>91.6</td>
+            <td class="group-sep">9.4</td><td>18.4</td><td>12.4</td><td class="best">53.6</td><td>75.7</td><td class="best">56.8</td>
+            <td class="group-sep">29.4</td><td>36.9</td><td>37.0</td><td>45.5</td><td>51.7</td><td>55.7</td>
+          </tr>
+          <tr>
+            <td>LLMDet+SAM</td>
+            <td>62.4</td><td>65.9</td><td>72.1</td><td>77.2</td><td>72.2</td><td>91.9</td>
+            <td class="group-sep">4.3</td><td>8.7</td><td>5.8</td><td>53.2</td><td class="best">76.0</td><td>56.5</td>
+            <td class="group-sep">22.2</td><td>31.7</td><td>29.2</td><td>44.5</td><td class="best">56.2</td><td>55.2</td>
+          </tr>
+          <tr>
+            <td>GPT-5.4 (medium)+SAM</td>
+            <td>34.2</td><td>35.1</td><td class="best">81.7</td><td>39.7</td><td>32.5</td><td>80.0</td>
+            <td class="group-sep">17.2</td><td>20.9</td><td class="best">43.0</td><td>25.8</td><td>26.3</td><td>53.7</td>
+            <td class="group-sep">20.2</td><td>30.1</td><td>42.4</td><td>30.7</td><td>34.4</td><td>51.9</td>
+          </tr>
+          <tr>
+            <td>Florence-2</td>
+            <td>9.8</td><td>14.8</td><td>11.9</td><td>7.6</td><td>10.1</td><td>9.1</td>
+            <td class="group-sep">6.2</td><td>17.7</td><td>8.2</td><td>17.0</td><td>38.0</td><td>19.6</td>
+            <td class="group-sep">11.8</td><td>20.9</td><td>23.5</td><td>21.2</td><td>28.8</td><td>32.1</td>
+          </tr>
+          <tr>
+            <td>GLaMM</td>
+            <td>38.5</td><td>40.8</td><td>45.7</td><td>33.1</td><td>31.5</td><td>38.9</td>
+            <td class="group-sep">23.1</td><td>24.0</td><td>29.7</td><td>19.4</td><td>18.4</td><td>24.1</td>
+            <td class="group-sep">22.2</td><td>23.1</td><td>26.0</td><td>18.3</td><td>17.4</td><td>21.2</td>
+          </tr>
+          <tr>
+            <td>Qwen3.5-FT</td>
+            <td>39.4</td><td>41.2</td><td>51.4</td><td>37.3</td><td>37.4</td><td>48.3</td>
+            <td class="group-sep">3.9</td><td>26.9</td><td>5.2</td><td>4.4</td><td>28.0</td><td>5.2</td>
+            <td class="group-sep">31.1</td><td>38.6</td><td>47.6</td><td>33.1</td><td>38.0</td><td>43.6</td>
+          </tr>
+          <tr class="rule-above">
+            <td>ConCor-1 (random init.)</td>
+            <td>15.1</td><td>32.8</td><td>22.9</td><td>25.1</td><td>49.5</td><td>35.6</td>
+            <td class="group-sep">0.1</td><td>18.5</td><td>0.2</td><td>0.2</td><td>32.5</td><td>0.3</td>
+            <td class="group-sep">2.8</td><td>20.4</td><td>5.4</td><td>4.3</td><td>26.6</td><td>6.5</td>
+          </tr>
+          <tr class="ours">
+            <td><strong>ConCor-1</strong></td>
+            <td class="best">72.4</td><td class="best">74.3</td><td>81.0</td><td class="best">79.8</td><td class="best">74.2</td><td class="best">92.7</td>
+            <td class="group-sep best">29.9</td><td class="best">41.4</td><td>33.8</td><td>39.8</td><td>51.4</td><td>45.0</td>
+            <td class="group-sep best">49.8</td><td class="best">59.9</td><td class="best">59.1</td><td class="best">48.9</td><td>53.7</td><td class="best">57.4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-caption">
+      <span class="lead">Table 2.</span>
+      Image-category results on the COCO validation set, LVIS-minival and the EntitySeg validation set. Every
+      baseline except Qwen3.5-FT has to split the LVIS vocabulary into chunks and run several forward passes;
+      ConCor-1 takes it in one.
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-10">
+        <h3 class="title is-4" style="margin-top:2.8rem;">Findings</h3>
+        <div class="content has-text-justified">
+          <ul class="findings">
+            <li>
+              <em>Explicit correspondence prediction beats language-only generation.</em>
+              Qwen3.5-FT generates spans and polygons autoregressively and is strong on text metrics, but
+              ConCor-1 lifts JointF1 from 59.9 to 88.8 on COCONut-PanCap: bridge tokens bind text to image far
+              more reliably than generated output does.
+            </li>
+            <li>
+              <em>The gains are largest on long, dense captions.</em>
+              COCONut-PanCap has the longest captions and the densest object references, and it is where the
+              margin over every baseline is widest &mdash; exactly the many-to-many alignment that explicit
+              correspondence prediction targets.
+            </li>
+            <li>
+              <em>Pretrained representations carry the task.</em>
+              The randomly initialised variant collapses on both settings, which puts the burden of
+              recognition, referential understanding and cross-modal alignment on what the VLM already knows.
+            </li>
+            <li>
+              <em>Detection-based grounding does not give full correspondence.</em>
+              Detector baselines stay competitive on mask-only metrics yet fall behind on joint correspondence:
+              localizing regions is not the hard part, deciding which text refers to them is.
+            </li>
+            <li>
+              <em>A large vocabulary fits in one pass.</em>
+              On LVIS-minival ConCor-1 reaches 29.9 JointF1 against 23.1 for the strongest baseline, a 29%
+              relative gain, without chunking the category list.
+            </li>
+            <li>
+              <em>Thresholded and soft metrics reward different things.</em>
+              Some detectors score well on the soft IoU metrics through good partial localization, while
+              ConCor-1 leads on the thresholded F1 metrics &mdash; it makes better correspondence decisions,
+              not just better overlaps.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ Qualitative ════════════════════════════════════════════════════════ -->
+<!-- <section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Qualitative Results</h2>
+
+        <figure class="figure narrow">
+          <img src="./static/images/qualitative.jpg"
+               alt="Qualitative comparison of ground truth, GDINO+SAM and ConCor-1 on COCONut-PanCap.">
+        </figure>
+
+        <figure class="figure tall">
+          <img src="./static/images/qualitative-more.jpg"
+               alt="Additional qualitative comparisons on COCONut-PanCap.">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<!-- ══ BibTeX ═════════════════════════════════════════════════════════════ -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{zhang2026concor,
+      title   = {Vision-Language Grounding as Bidirectional Concept Correspondence},
+      author  = {Zhang, Jieyu and Gao, Ziqi and Zettlemoyer, Luke and Krishna, Ranjay},
+      year    = {2026}
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link" href="https://github.com/uwGZQ/ConCor-1">
+        <i class="fab fa-github"></i>
+      </a>
+      <a class="icon-link" href="https://huggingface.co/UWGZQ/ConCor-1">
+        <span>&#129303;</span>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            Website template borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
