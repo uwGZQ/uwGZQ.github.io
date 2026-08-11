@@ -8,7 +8,7 @@
 ## 📝 Publications
 (* denotes equal contribution, + denotes corresponding author)
 ### Preprints
-- [Vision-Language Grounding as Bidirectional Concept Correspondence](https://uwgzq.github.io)
+- [Vision-Language Grounding as Bidirectional Concept Correspondence](https://arxiv.org/abs/2608.07886)
 <br>Jieyu Zhang\*, **Ziqi Gao\***, Luke Zettlemoyer, Ranjay Krishna\+.<br>
 
 ### Peer-reviewed
