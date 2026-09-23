@@ -1,4 +1,4 @@
-**Bio**: I am an incoming PhD student at the University of Washington, advised by Prof. [Ranjay Krishna](http://www.ranjaykrishna.com/index.html) at [UW CSE RAIVN Lab](https://raivn.cs.washington.edu). I am currently working at the Allen Institute for AI (AI2) as a Predoctoral Young Investigator (PYI). I work closely with senior Ph.D. student [Jieyu Zhang](https://jieyuz2.github.io/). 
+**Bio**: I am a PhD student at the University of Washington, advised by Prof. [Ranjay Krishna](http://www.ranjaykrishna.com/index.html) at [UW CSE RAIVN Lab](https://raivn.cs.washington.edu). I also work closely with senior Ph.D. student [Jieyu Zhang](https://jieyuz2.github.io/). 
 
 <!-- I recently graduated with a dual Master’s degree from University of Washington (Seattle) and Tsinghua University. At Tsinghua, I was affiliated with the Pervasive HCI Lab, where I was advised by Prof. [Yuanchun Shi](https://www.cs.tsinghua.edu.cn/csen/info/1306/4332.htm) and Prof. [Yuntao Wang](https://pi.cs.tsinghua.edu.cn/lab/people/YuntaoWang/en/).  -->
 
