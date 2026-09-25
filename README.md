@@ -7,11 +7,9 @@
 <!-- ## 📝 Selected Publications -->
 ## 📝 Publications
 (* denotes equal contribution)
-<!-- 
-### Preprints
-- [Vision-Language Grounding as Bidirectional Concept Correspondence](https://arxiv.org/abs/2608.07886)
-<br>Jieyu Zhang\*, **Ziqi Gao\***, Luke Zettlemoyer, Ranjay Krishna.<br>
--->
+
+<!-- ### Preprints- [Vision-Language Grounding as Bidirectional Concept Correspondence](https://arxiv.org/abs/2608.07886)
+<br>Jieyu Zhang\*, **Ziqi Gao\***, Luke Zettlemoyer, Ranjay Krishna.<br>-->
 
 ### Peer-reviewed
 - [Vision-Language Grounding as Bidirectional Concept Correspondence](https://arxiv.org/abs/2608.07886)
