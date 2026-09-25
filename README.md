@@ -7,11 +7,16 @@
 <!-- ## 📝 Selected Publications -->
 ## 📝 Publications
 (* denotes equal contribution)
+<!-- 
 ### Preprints
 - [Vision-Language Grounding as Bidirectional Concept Correspondence](https://arxiv.org/abs/2608.07886)
 <br>Jieyu Zhang\*, **Ziqi Gao\***, Luke Zettlemoyer, Ranjay Krishna.<br>
+-->
 
 ### Peer-reviewed
+- [Vision-Language Grounding as Bidirectional Concept Correspondence](https://arxiv.org/abs/2608.07886)
+<br>Jieyu Zhang\*, **Ziqi Gao\***, Luke Zettlemoyer, Ranjay Krishna.<br><ins>*NeurIPS 2026*</ins>
+
 - [Synthetic Visual Genome 2: Extracting Large-scale Spatio-Temporal Scene Graphs from Videos](https://arxiv.org/abs/2602.23543)
 <br>**Ziqi Gao**, Jieyu Zhang, Wisdom Oluchi Ikezogwo, Jae Sung Park, Tario G. You, Daniel Ogbu, Chenhao Zheng, Weikai Huang, Yinuo Yang, Winson Han, Quan Kong, Rajat Saini, Ranjay Krishna.<br><ins>*ECCV 2026*</ins>
 
